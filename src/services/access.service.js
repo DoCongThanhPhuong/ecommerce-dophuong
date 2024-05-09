@@ -2,14 +2,11 @@
 
 const shopModel = require('../models/shop.model')
 const bcrypt = require('bcrypt')
-const crypto = require('crypto')
-
-const RoleShop = {
-  SHOP: 'SHOP',
-  WRITER: '00001',
-  EDITOR: '00002',
-  ADMIN: '00003'
-}
+const crypto = require('node:crypto')
+const KeyTokenService = require('./keyToken.service')
+const { SHOP_ROLES } = require('../utils/constants')
+const { createTokenPair } = require('../auth/authUtils')
+const { getInfoData } = require('../utils')
 
 class AccessService {
   static signUp = async ({ name, email, password }) => {
@@ -27,16 +24,52 @@ class AccessService {
         name,
         email,
         password: passwordHash,
-        roles: [RoleShop.SHOP]
+        roles: [SHOP_ROLES.SHOP]
       })
 
       if (newShop) {
-        // create privateKey, publicKey
-        const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', {
-          modulusLength: 4096
+        // create publicKey, privateKey
+        const publicKey = crypto.randomBytes(64).toString('hex')
+        const privateKey = crypto.randomBytes(64).toString('hex')
+
+        console.log({ publicKey, privateKey })
+
+        const keyStore = await KeyTokenService.createKeyToken({
+          userId: newShop._id,
+          publicKey,
+          privateKey
         })
 
-        console.log({ privateKey, publicKey })
+        if (!keyStore) {
+          return {
+            code: 'xxxx',
+            message: 'keyStore error!'
+          }
+        }
+
+        // create token pair
+        const tokens = await createTokenPair(
+          { userId: newShop._id, email },
+          publicKey,
+          privateKey
+        )
+        console.log(`Created Token Successfully::`, tokens)
+
+        return {
+          code: 201,
+          metadata: {
+            shop: getInfoData({
+              fields: ['_id', 'name', 'email'],
+              object: newShop
+            }),
+            tokens
+          }
+        }
+      }
+
+      return {
+        code: 200,
+        metadata: null
       }
     } catch (error) {
       return {
