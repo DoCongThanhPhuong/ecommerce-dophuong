@@ -3,7 +3,7 @@
 const shopModel = require('../models/shop.model')
 const bcrypt = require('bcrypt')
 const crypto = require('node:crypto')
-const KeyTokenService = require('./keyToken.service')
+const KeyTokenService = require('./keytoken.service')
 const { SHOP_ROLES } = require('../utils/constants')
 const { createTokenPair } = require('../auth/authUtils')
 const { getInfoData } = require('../utils')

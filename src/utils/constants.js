@@ -5,6 +5,12 @@ const SHOP_ROLES = {
   ADMIN: '00004'
 }
 
+const HEADER = {
+  API_KEY: 'x-api-key',
+  AUTHORIZATION: 'authorization'
+}
+
 module.exports = {
-  SHOP_ROLES
+  SHOP_ROLES,
+  HEADER
 }
