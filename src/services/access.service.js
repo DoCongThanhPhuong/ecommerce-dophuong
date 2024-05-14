@@ -15,6 +15,11 @@ const {
 const { findByEmail } = require('./shop.service')
 
 class AccessService {
+  static logout = async (keyStore) => {
+    const delKey = await KeyTokenService.removeKeyById(keyStore._id)
+    return delKey
+  }
+
   /*
     LOGIN
     1 - check email in dbs
