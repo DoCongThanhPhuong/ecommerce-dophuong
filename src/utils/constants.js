@@ -11,7 +11,13 @@ const HEADER = {
   AUTHORIZATION: 'authorization'
 }
 
+API_KEY_PERMISSIONS = ['0000', '1111', '2222']
+
+const PRODUCT_TYPES = ['Electronics', 'Clothing', 'Furnitures']
+
 module.exports = {
   SHOP_ROLES,
-  HEADER
+  HEADER,
+  API_KEY_PERMISSIONS,
+  PRODUCT_TYPES
 }

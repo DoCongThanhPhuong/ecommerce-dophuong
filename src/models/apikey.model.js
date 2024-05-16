@@ -1,12 +1,13 @@
 'use strict'
 
 const { Schema, model } = require('mongoose')
+const { API_KEY_PERMISSIONS } = require('../utils/constants')
 
 const DOCUMENT_NAME = 'ApiKey'
 const COLLECTION_NAME = 'apikeys'
 
 // Declare the Schema of the Mongo model
-var apiKeySchema = new Schema(
+const apiKeySchema = new Schema(
   {
     key: {
       type: String,
@@ -20,7 +21,7 @@ var apiKeySchema = new Schema(
     permissions: {
       type: [String],
       required: true,
-      enum: ['0000', '1111', '2222']
+      enum: API_KEY_PERMISSIONS
     }
   },
   {
