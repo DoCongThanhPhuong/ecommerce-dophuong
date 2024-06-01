@@ -8,7 +8,8 @@ const SHOP_ROLES = {
 const HEADER = {
   API_KEY: 'x-api-key',
   CLIENT_ID: 'x-client-id',
-  AUTHORIZATION: 'authorization'
+  AUTHORIZATION: 'authorization',
+  REFRESHTOKEN: 'x-rtoken-id'
 }
 
 API_KEY_PERMISSIONS = ['0000', '1111', '2222']

@@ -16,6 +16,33 @@ const { findByEmail } = require('./shop.service')
 
 class AccessService {
   // check this token used?
+  static handleRefreshTokenV2 = async ({ refreshToken, user, keyStore }) => {
+    const { userId, email } = user
+    if (keyStore.usedRefreshTokens.includes(refreshToken)) {
+      await KeyTokenService.deleteKeyByUserId(userId)
+      throw new ForbiddenError('Something went wrong! Please re-login')
+    }
+
+    if (keyStore.refreshToken != refreshToken)
+      throw new AuthFailureError('Shop not registered')
+
+    const foundShop = await findByEmail({ email })
+    if (!foundShop) throw new AuthFailureError('Shop not registered')
+
+    const tokens = await createTokenPair(
+      { userId, email },
+      keyStore.publicKey,
+      keyStore.privateKey
+    )
+
+    // update
+    keyStore.refreshToken = tokens.refreshToken
+    keyStore.usedRefreshTokens.push(refreshToken)
+    await keyStore.save()
+
+    return { user, tokens }
+  }
+
   static handleRefreshToken = async (refreshToken) => {
     const foundToken = await KeyTokenService.findByUsedRefreshToken(
       refreshToken
@@ -77,7 +104,7 @@ class AccessService {
     4 - generate tokens
     5 - get data return login
   */
-  static login = async ({ email, password, refreshToken }) => {
+  static login = async ({ email, password, refreshToken = null }) => {
     // 1
     const foundShop = await findByEmail({ email })
     if (!foundShop) throw new BadRequestError('Shop not registered')
@@ -111,13 +138,16 @@ class AccessService {
   }
 
   static signUp = async ({ name, email, password }) => {
-    // try {
     // step 1: check email exists?
     const holderShop = await shopModel.findOne({ email }).lean()
     if (holderShop) {
       throw new BadRequestError('Error: Shop already registered')
     }
+
+    // step 2: hash password
     const passwordHash = await bcrypt.hash(password, 10)
+
+    // step 3: create new shop
     const newShop = await shopModel.create({
       name,
       email,
@@ -132,10 +162,19 @@ class AccessService {
 
       console.log({ publicKey, privateKey })
 
+      // create token pair
+      const tokens = await createTokenPair(
+        { userId: newShop._id, email },
+        publicKey,
+        privateKey
+      )
+
+      // create KeyToken with refreshToken
       const keyStore = await KeyTokenService.createKeyToken({
         userId: newShop._id,
         publicKey,
-        privateKey
+        privateKey,
+        refreshToken: tokens.refreshToken
       })
 
       if (!keyStore) {
@@ -145,12 +184,6 @@ class AccessService {
         }
       }
 
-      // create token pair
-      const tokens = await createTokenPair(
-        { userId: newShop._id, email },
-        publicKey,
-        privateKey
-      )
       console.log(`Created Token Successfully::`, tokens)
 
       return {
@@ -169,13 +202,6 @@ class AccessService {
       code: 200,
       metadata: null
     }
-    // } catch (error) {
-    //   return {
-    //     code: 'xxx',
-    //     message: error.message,
-    //     status: 'error'
-    //   }
-    // }
   }
 }
 
