@@ -1,7 +1,7 @@
 'use strict'
 
 const { Schema, model } = require('mongoose')
-const { API_KEY_PERMISSIONS } = require('../utils/constants')
+import { API_KEY_PERMISSIONS } from '~/utils/constants'
 
 const DOCUMENT_NAME = 'ApiKey'
 const COLLECTION_NAME = 'apikeys'
@@ -29,6 +29,5 @@ const apiKeySchema = new Schema(
     collection: COLLECTION_NAME
   }
 )
-
 //Export the model
 module.exports = model(DOCUMENT_NAME, apiKeySchema)

@@ -76,7 +76,7 @@ module.exports = {
    *
    * Any attempt to brew coffee with a teapot should result in the error code "418 I'm a teapot". The resulting entity body MAY be short and stout.
    */
-  IM_A_TEAPOT: "I'm a teapot",
+  IM_A_TEAPOT: 'I am a teapot',
   /**
    * Official Documentation @ https://tools.ietf.org/html/rfc2518#section-10.6
    *
