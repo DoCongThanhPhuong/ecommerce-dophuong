@@ -52,7 +52,7 @@ const clothingSchema = new Schema(
       type: String,
       require: true
     },
-    type: String,
+    size: String,
     material: String
   },
   {

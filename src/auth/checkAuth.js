@@ -1,5 +1,6 @@
 'use strict'
 
+const { ForbiddenError } = require('~/core/error.response')
 const { findById } = require('../services/apikey.service')
 const { HEADER } = require('../utils/constants')
 
@@ -16,7 +17,9 @@ const apiKey = async (req, res, next) => {
     }
     req.objKey = objKey
     return next()
-  } catch (error) {}
+  } catch (error) {
+    throw new ForbiddenError('Forbidden Error')
+  }
 }
 
 const permission = (permission) => {

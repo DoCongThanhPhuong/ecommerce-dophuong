@@ -1,7 +1,7 @@
 'use strict'
 
 const { Schema, model } = require('mongoose')
-import { API_KEY_PERMISSIONS } from '~/utils/constants'
+const { API_KEY_PERMISSIONS } = require('~/utils/constants')
 
 const DOCUMENT_NAME = 'ApiKey'
 const COLLECTION_NAME = 'apikeys'

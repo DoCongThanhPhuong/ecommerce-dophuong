@@ -184,7 +184,7 @@ class AccessService {
         }
       }
 
-      console.log(`Created Token Successfully::`, tokens)
+      console.log('Created Token Successfully::', tokens)
 
       return {
         code: 201,
