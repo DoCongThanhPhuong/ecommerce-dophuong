@@ -10,7 +10,7 @@ class AccessController {
     //   metadata: await AccessService.handleRefreshToken(req.body.refreshToken)
     // }).send(res)
 
-    // V2 fixed, no need accessToke
+    // V2 fixed, no need accessToken
     new SuccessResponse({
       message: 'Get token Successfully',
       metadata: await AccessService.handleRefreshTokenV2({
