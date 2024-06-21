@@ -17,6 +17,8 @@ router.get('/:product_id', asyncHandler(productController.findOneProduct))
 router.use(authenticationV2)
 // create
 router.post('', asyncHandler(productController.createProduct))
+// update
+router.patch('/:productId', asyncHandler(productController.updateProduct))
 router.post(
   '/publish/:id',
   asyncHandler(productController.publishProductByShop)
