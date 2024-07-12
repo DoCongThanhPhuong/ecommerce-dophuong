@@ -8,31 +8,31 @@ const COLLECTION_NAME = 'discounts'
 // Declare the Schema of the Mongo model
 const discountSchema = new Schema(
   {
-    discount_name: { Type: String, required: true },
-    discount_description: { Type: String, required: true },
+    discount_name: { type: String, required: true },
+    discount_description: { type: String, required: true },
     discount_type: {
-      Type: String,
+      type: String,
       enum: ['fixed_amount', 'percentage'],
       default: 'fixed_amount'
     },
-    discount_value: { Type: Number, required: true },
-    discount_code: { Type: String, required: true },
-    discount_start_date: { Type: Date, required: true },
-    discount_end_date: { Type: Date, required: true },
-    discount_max_uses: { Type: Number, required: true },
-    discount_max_value: { Type: Number, required: true },
-    discount_uses_count: { Type: Number, required: true }, // so discount da su dung
-    discount_users_used: { Type: Array, default: [] },
-    discount_max_uses_per_users: { Type: Number, required: true },
-    discount_min_order_value: { Type: Number, required: true },
-    discount_shopId: { Type: Schema.Types.ObjectId, ref: 'Shop' },
-    discount_is_active: { Type: Boolean, required: true },
+    discount_value: { type: Number, required: true },
+    discount_code: { type: String, required: true },
+    discount_start_date: { type: Date, required: true },
+    discount_end_date: { type: Date, required: true },
+    discount_max_uses: { type: Number, required: true },
+    discount_max_value: { type: Number, required: true },
+    discount_uses_count: { type: Number, required: true }, // so discount da su dung
+    discount_users_used: { type: Array, default: [] },
+    discount_max_uses_per_users: { type: Number, required: true },
+    discount_min_order_value: { type: Number, required: true },
+    discount_shopId: { type: Schema.Types.ObjectId, ref: 'Shop' },
+    discount_is_active: { type: Boolean, required: true },
     discount_applies_to: {
-      Type: String,
+      type: String,
       required: true,
       enum: ['all', 'specific']
     },
-    discount_product_ids: { Type: Array, default: [] }
+    discount_product_ids: { type: Array, default: [] }
   },
   {
     timestamps: true,
