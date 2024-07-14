@@ -15,8 +15,8 @@ const cartSchema = new Schema(
       default: 'active'
     },
     cart_products: { type: Array, required: true, default: [] }, // productId, shopId, quantity, name, price
-    cart_product_count: { type: Number, required: true },
-    cart_userId: { type: Schema.Types.ObjectId, required: true }
+    cart_product_count: { type: Number, default: 0 },
+    cart_userId: { type: Number, required: true }
   },
   {
     timestamps: true,
