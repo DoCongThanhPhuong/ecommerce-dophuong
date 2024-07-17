@@ -170,12 +170,10 @@ class DiscountService {
     if (!discount_is_active) throw new NotFoundError('Discount code expired')
     if (!discount_max_uses) throw new NotFoundError('Discount code used out')
 
-    if (
-      new Date() > new Date(discount_start_date) ||
-      new Date() > new Date(discount_end_date)
-    ) {
+    if (new Date() < new Date(discount_start_date))
+      throw new BadRequestError('Discount is not yet available')
+    if (new Date() > new Date(discount_end_date))
       throw new BadRequestError('Discount code expired')
-    }
 
     let totalOrder = 0
     if (discount_min_order_value > 0) {

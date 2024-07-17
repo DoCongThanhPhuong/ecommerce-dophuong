@@ -29,11 +29,17 @@ app.use((req, res, next) => {
 
 app.use((error, req, res, next) => {
   const statusCode = error.status || 500
-  return res.status(statusCode).json({
+  const errorResponse = {
     status: 'error',
     code: statusCode,
     message: error.message || 'Internal Server Error'
-  })
+  }
+
+  if (process.env.NODE_ENV === 'dev') {
+    errorResponse.stack = error.stack
+  }
+
+  return res.status(statusCode).json(errorResponse)
 })
 
 module.exports = app
