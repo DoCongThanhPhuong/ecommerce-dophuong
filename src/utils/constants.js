@@ -15,3 +15,11 @@ export const HEADER = {
 export const API_KEY_PERMISSIONS = ['0000', '1111', '2222']
 
 export const PRODUCT_TYPES = ['Electronics', 'Clothing', 'Furniture']
+
+export const ORDER_STATUS = {
+  PENDING: 'pending',
+  CONFIRMED: 'confirmed',
+  SHIPPED: 'shipped',
+  CANCELED: 'canceled',
+  DELIVERED: 'delivered'
+}

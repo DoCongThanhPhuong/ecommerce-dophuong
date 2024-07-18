@@ -4,6 +4,8 @@ const { NotFoundError, BadRequestError } = require('~/core/error.response')
 const { findCartById } = require('~/models/repositories/cart.repo')
 const { checkProductsByServer } = require('~/models/repositories/product.repo')
 const { getDiscountAmount } = require('./discount.service')
+const { acquireLock, releaseLock } = require('./redis.service')
+const { order } = require('~/models/order.model')
 
 class CheckoutService {
   /**
@@ -45,7 +47,7 @@ class CheckoutService {
       // check product available
       const checkProductsServer = await checkProductsByServer(item_products)
       console.log(
-        '🚀 ~ CheckoutService ~ checkoutReview ~ checkProductByServer:',
+        '🚀 ~ CheckoutService ~ checkoutReview ~ checkProductsServer:',
         checkProductsServer
       )
       if (!checkProductsServer) throw new BadRequestError('Order wrong')
@@ -100,6 +102,77 @@ class CheckoutService {
       checkout_order
     }
   }
+
+  static async orderByUser({
+    shop_order_ids,
+    cartId,
+    userId,
+    user_address = {},
+    user_payment = {}
+  }) {
+    const { new_shop_order_ids, checkout_order } =
+      await CheckoutService.checkoutReview({
+        cartId,
+        userId,
+        shop_order_ids
+      })
+
+    // check lai mot lan nua xem vuot ton kho hay khong
+    // get new array Products
+    const products = new_shop_order_ids.flatMap((order) => order.item_products)
+    console.log('🚀 ~ CheckoutService ~ products:', products)
+
+    const acquireProducts = []
+    for (let i = 0; i < products.length; i++) {
+      const { productId, quantity } = products[i]
+      const keyLock = await acquireLock(productId, quantity, cartId)
+      acquireProducts.push(keyLock ? true : false)
+      if (keyLock) {
+        await releaseLock(keyLock)
+      }
+    }
+
+    // check neu co san pham da het hang trong kho
+    if (acquireProducts.includes(false)) {
+      throw new BadRequestError(
+        'Some products have been updated, please return to your cart'
+      )
+    }
+
+    const newOrder = await order.create({
+      order_userId: userId,
+      order_checkout: checkout_order,
+      order_shipping: user_address,
+      order_payment: user_payment,
+      order_products: new_shop_order_ids
+    })
+
+    // truong hop neu insert thanh cong, thi remove prouduct co trong gio hang
+    if (newOrder) {
+      // remove products in cart
+    }
+    return newOrder
+  }
+
+  /**
+   * 1. Query orders [Users]
+   */
+  static async getOrderByUser() {}
+
+  /**
+   * 2. Query an order using id [Users]
+   */
+  static async getOneOrderByUser() {}
+
+  /**
+   * 3. Cancel order [Users]
+   */
+  static async cancelOrderByUser() {}
+
+  /**
+   * 4. Update order status [Admin or Shop]
+   */
+  static async updateOrderStatus() {}
 }
 
 module.exports = CheckoutService
