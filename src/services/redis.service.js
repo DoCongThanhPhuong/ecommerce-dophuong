@@ -5,8 +5,16 @@ const { promisify } = require('util')
 const { reservationInventory } = require('~/models/repositories/inventory.repo')
 const redisClient = redis.createClient()
 
-const pExpire = promisify(redisClient.pExpire).bind(redisClient)
-const setNXAsync = promisify(redisClient.setNX).bind(redisClient)
+redisClient.ping((err, result) => {
+  if (err) {
+    console.err('Error connecting to Redis::', err)
+  } else {
+    console.log('Connected to Redis')
+  }
+})
+
+const pexpire = promisify(redisClient.pexpire).bind(redisClient)
+const setnxAsync = promisify(redisClient.setnx).bind(redisClient)
 
 const acquireLock = async (productId, quantity, cartId) => {
   const key = `lock_v2024_${productId}`
@@ -14,7 +22,7 @@ const acquireLock = async (productId, quantity, cartId) => {
   const expireTime = 3000 // 3 seconds tam lock
   for (let i = 0; i < retryTimes; i++) {
     // tao mot key, nguoi nam giu key thi duoc vao thanh toan
-    const result = await setNXAsync(key, expireTime)
+    const result = await setnxAsync(key, expireTime)
     console.log('🚀 ~ acquireLock ~  result:', result)
     if (result === 1) {
       // thao tac voi inventory
@@ -24,7 +32,7 @@ const acquireLock = async (productId, quantity, cartId) => {
         cartId
       })
       if (isReservation.modifiedCount > 0) {
-        await pExpire(key, expireTime)
+        await pexpire(key, expireTime)
         return key
       }
       return null
