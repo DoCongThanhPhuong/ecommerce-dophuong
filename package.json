@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.24.6",
+    "amqplib": "^0.10.3",
     "babel-plugin-module-resolver": "^5.0.2",
     "bcrypt": "^5.1.1",
     "discord.js": "^14.15.3",

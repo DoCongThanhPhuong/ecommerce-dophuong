@@ -23,3 +23,10 @@ export const ORDER_STATUS = {
   CANCELED: 'canceled',
   DELIVERED: 'delivered'
 }
+
+export const NOTIFICATION_TYPES = {
+  ORDER001: 'ORDER-001',
+  ORDER002: 'ORDER-002',
+  PROMOTION001: 'PROMOTION-001',
+  SHOP001: 'SHOP-001'
+}
