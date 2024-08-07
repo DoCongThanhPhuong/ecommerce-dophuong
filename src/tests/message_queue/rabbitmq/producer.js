@@ -11,9 +11,15 @@ const runProducer = async () => {
     // sens msg
     channel.sendToQueue(queueName, Buffer.from(message))
     console.log('🚀 ~ runProducer ~ message:', message)
+    setTimeout(() => {
+      connection.close()
+      process.exit(0)
+    }, 500)
   } catch (error) {
     console.error(error)
   }
 }
 
-runProducer().catch(console.error)
+runProducer()
+  .then((rs) => console.log(rs))
+  .catch(console.error)

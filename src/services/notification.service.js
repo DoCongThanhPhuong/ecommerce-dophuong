@@ -12,9 +12,9 @@ class NotificationService {
   }) {
     let noti_content
     if ((type = NOTIFICATION_TYPES.SHOP001)) {
-      noti_content = '@@@ have just created a new product: @@@@'
+      noti_content = '@@@ has just created a new product: @@@@'
     } else if ((type = NOTIFICATION_TYPES.PROMOTION001)) {
-      noti_content = '@@@ have just created a new voucher: @@@@@'
+      noti_content = '@@@ has just created a new voucher: @@@@@'
     }
 
     const newNotification = await notification.create({
