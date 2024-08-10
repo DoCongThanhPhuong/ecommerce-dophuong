@@ -7,7 +7,7 @@ const dev = {
   db: {
     host: process.env.DEV_DB_HOST || '127.0.0.1',
     port: process.env.DEV_DB_PORT || 27017,
-    name: process.env.DEV_DB_NAME || 'thanhphuong-shop'
+    name: process.env.DEV_DB_NAME || 'ecommerce-dophuong'
   }
 }
 
@@ -18,7 +18,7 @@ const pro = {
   db: {
     host: process.env.PRO_DB_HOST || '127.0.0.1',
     port: process.env.PRO_DB_PORT || 27017,
-    name: process.env.PRO_DB_NAME || 'thanhphuong-shop'
+    name: process.env.PRO_DB_NAME || 'ecommerce-dophuong'
   }
 }
 
