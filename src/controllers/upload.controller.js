@@ -9,14 +9,14 @@ const {
 } = require('~/services/upload.service')
 
 class UploadController {
-  uploadFile = async (req, res) => {
+  uploadFile = async (req, res, next) => {
     new SuccessResponse({
       message: 'Upload file successfully',
       metadata: await uploadImageByUrl()
     }).send(res)
   }
 
-  uploadThumbnail = async (req, res) => {
+  uploadThumbnail = async (req, res, next) => {
     const { file } = req
     if (!file) {
       throw new BadRequestError('File missing')
@@ -29,7 +29,7 @@ class UploadController {
     }).send(res)
   }
 
-  uploadManyImagesFromLocal = async (req, res) => {
+  uploadManyImagesFromLocal = async (req, res, next) => {
     const { files } = req
     if (!files.length) {
       throw new BadRequestError('Files missing')
