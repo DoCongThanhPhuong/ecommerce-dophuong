@@ -3,6 +3,8 @@ const express = require('express')
 const morgan = require('morgan')
 const { default: helmet } = require('helmet')
 const compression = require('compression')
+const { v4: uuidv4 } = require('uuid')
+const myLogger = require('~/loggers/mylogger.log')
 const app = express()
 
 // init middlewares
@@ -17,10 +19,21 @@ app.use(express.urlencoded({ extended: true }))
 // const productTest = require('./tests/product.test')
 // productTest.purchaseProduct('product:001', 10)
 
+app.use((req, res, next) => {
+  const requestId = req.headers['x-request-id']
+  req.requestId = requestId ? requestId : uuidv4()
+  myLogger.log(`Input params:: ${req.method}`, [
+    req.path,
+    { requestId: req.requestId },
+    req.method === 'POST' ? req.body : req.query
+  ])
+  next()
+})
+
 // init database
 require('./dbs/init.mongodb')
-const { checkOverload } = require('./helpers/check.connect')
-checkOverload()
+// const { checkOverload } = require('./helpers/check.connect')
+// checkOverload()
 
 // init routes
 app.use('/', require('./routes'))
@@ -34,6 +47,16 @@ app.use((req, res, next) => {
 
 app.use((error, req, res, next) => {
   const statusCode = error.status || 500
+
+  const resMessage = `${error.status} - ${
+    Date.now() - error.now
+  }ms - response: ${JSON.stringify(error)}`
+  myLogger.error(resMessage, [
+    req.path,
+    { requestId: req.requestId },
+    { message: error.message }
+  ])
+
   const errorResponse = {
     status: 'error',
     code: statusCode,
