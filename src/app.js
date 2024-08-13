@@ -32,6 +32,8 @@ app.use((req, res, next) => {
 
 // init database
 require('./dbs/init.mongodb')
+const initRedis = require('./dbs/init.redis')
+initRedis.initRedis()
 // const { checkOverload } = require('./helpers/check.connect')
 // checkOverload()
 
