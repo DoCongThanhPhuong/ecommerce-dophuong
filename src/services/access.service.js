@@ -10,7 +10,8 @@ const { getInfoData } = require('../utils')
 const {
   BadRequestError,
   AuthFailureError,
-  ForbiddenError
+  ForbiddenError,
+  InternalServerError
 } = require('../core/error.response')
 const { findByEmail } = require('./shop.service')
 
@@ -177,17 +178,11 @@ class AccessService {
         refreshToken: tokens.refreshToken
       })
 
-      if (!keyStore) {
-        return {
-          code: 'xxxx',
-          message: 'keyStore error!'
-        }
-      }
+      if (!keyStore) throw new InternalServerError('Failed to create keystore')
 
       console.log('Created Token Successfully::', tokens)
-
       return {
-        code: 201,
+        statusCode: 201,
         metadata: {
           shop: getInfoData({
             fields: ['_id', 'name', 'email'],
@@ -199,7 +194,7 @@ class AccessService {
     }
 
     return {
-      code: 200,
+      statusCode: 200,
       metadata: null
     }
   }

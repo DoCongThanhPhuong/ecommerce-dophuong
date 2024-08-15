@@ -91,7 +91,7 @@ const emailTokenHTML = () => {
             </p>
             <div class="otp"><a href="{{link_verify}}">Verify my account</a></div>
             <p>
-              <strong>One-Time Password (OTP) is valid for 1 minutes.</strong>
+              <strong>One-Time Password (OTP) is valid for 5 minutes.</strong>
               <br />
               <br />
               If you did not initiate this register request, please disregard this

@@ -44,7 +44,7 @@ const sendEmailToken = async ({ email = null }) => {
     if (!template) throw new NotFoundError('Template not found')
     // 3. replace placeholder with parameters
     const content = replacePlaceholder(template.tem_html, {
-      link_verify: `http://localhost:3056/cgp/welcome-back?token=${token.otp_token}`
+      link_verify: `http://localhost:3056/v1/api/user/welcome?token=${token.otp_token}`
     })
     // 4. send email with token
     sendEmailLinkVerify({
