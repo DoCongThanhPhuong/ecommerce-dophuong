@@ -2,9 +2,11 @@
 
 const _ = require('lodash')
 const { NotFoundError } = require('~/core/error.response')
+const { setCacheIOExpiration } = require('~/models/repositories/cache.repo')
 const skuModel = require('~/models/sku.model')
 const spuModel = require('~/models/spu.model')
 const { randomProductId } = require('~/utils')
+const { CACHE_PRODUCT } = require('~/utils/constants')
 
 const newSku = async ({ spu_id, sku_list }) => {
   try {
@@ -24,12 +26,28 @@ const newSku = async ({ spu_id, sku_list }) => {
 
 const findOneSku = async ({ sku_id, product_id }) => {
   try {
-    // read cache
-    const sku = await skuModel.findOne({ sku_id, product_id }).lean()
-    if (sku) {
-      // set cache
-    }
-    return _.omit(sku, ['__v', 'updatedAt', 'createdAt', 'isDeleted'])
+    // 1. check params
+    if (sku_id < 0) return null
+    if (product_id < 0) return null
+
+    // 2. read cache
+    const skuKeyCache = `${CACHE_PRODUCT.SKU}${sku_id}` // key cache
+    // let skuCache = await getCacheIO({ key: skuKeyCache })
+    // if (skuCache) return { ...JSON.parse(skuCache), toLoad: 'cache' }
+
+    // 3. read database
+    // if (!skuCache) {
+    const skuCache = await skuModel.findOne({ sku_id, product_id }).lean()
+    const valueCache = skuCache ? skuCache : null
+
+    setCacheIOExpiration({
+      key: skuKeyCache,
+      value: JSON.stringify(valueCache),
+      expirationInSeconds: 30
+    }).then()
+    // }
+
+    return { ...skuCache, toLoad: 'dbs' }
   } catch (error) {
     throw error
   }

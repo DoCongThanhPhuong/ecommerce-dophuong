@@ -4,6 +4,8 @@ const express = require('express')
 const { authenticationV2 } = require('~/auth/authUtils')
 const productController = require('~/controllers/product.controller')
 const asyncHandler = require('~/helpers/asyncHandler')
+const { readCache } = require('~/middlewares/cache.middleware')
+const { validateProductQuery } = require('~/validations/product.validation')
 const router = express.Router()
 
 router.get(
@@ -13,7 +15,12 @@ router.get(
 router.get('', asyncHandler(productController.findAllProducts))
 router.get('/:product_id', asyncHandler(productController.findOneProduct))
 
-router.get('/sku/select_variation', asyncHandler(productController.findOneSku))
+router.get(
+  '/sku/select_variation',
+  validateProductQuery,
+  readCache,
+  asyncHandler(productController.findOneSku)
+)
 router.get('/spu/get_spu_info', asyncHandler(productController.findOneSpu))
 
 // authentication

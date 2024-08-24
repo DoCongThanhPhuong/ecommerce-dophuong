@@ -10,8 +10,7 @@ const { getInfoData } = require('../utils')
 const {
   BadRequestError,
   AuthFailureError,
-  ForbiddenError,
-  InternalServerError
+  ForbiddenError
 } = require('../core/error.response')
 const { findByEmail } = require('./shop.service')
 
@@ -178,7 +177,7 @@ class AccessService {
         refreshToken: tokens.refreshToken
       })
 
-      if (!keyStore) throw new InternalServerError('Failed to create keystore')
+      if (!keyStore) throw new Error('Failed to create keystore')
 
       console.log('Created Token Successfully::', tokens)
       return {

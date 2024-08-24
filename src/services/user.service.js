@@ -1,10 +1,6 @@
 'use strict'
 
-const {
-  BadRequestError,
-  NotFoundError,
-  InternalServerError
-} = require('~/core/error.response')
+const { BadRequestError, NotFoundError } = require('~/core/error.response')
 const userModel = require('~/models/user.model')
 const { sendEmailToken } = require('./email.service')
 const { checkEmailToken } = require('./otp.service')
@@ -69,8 +65,7 @@ class UserService {
           refreshToken: tokens.refreshToken
         })
 
-        if (!keyStore)
-          throw new InternalServerError('Failed to create keystore')
+        if (!keyStore) throw new Error('Failed to create keystore')
 
         console.log('Created Token Successfully::', tokens)
         return {

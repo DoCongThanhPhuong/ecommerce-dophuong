@@ -37,6 +37,11 @@ initRedis.initRedis()
 // const { checkOverload } = require('./helpers/check.connect')
 // checkOverload()
 
+const ioredis = require('./dbs/init.ioredis')
+ioredis.init({
+  IOREDIS_IS_ENABLED: true
+})
+
 // init routes
 app.use('/', require('./routes'))
 
