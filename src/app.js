@@ -42,6 +42,12 @@ ioredis.init({
   IOREDIS_IS_ENABLED: true
 })
 
+// init elasticsearch
+const initElasticsearch = require('./dbs/init.elasticsearch')
+initElasticsearch.init({
+  ELASTICSEARCH_IS_ENABLED: true
+})
+
 // init routes
 app.use('/', require('./routes'))
 

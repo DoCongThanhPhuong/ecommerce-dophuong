@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.24.6",
+    "@elastic/elasticsearch": "^7.17.14",
     "accesscontrol": "^2.2.1",
     "amqplib": "^0.10.3",
     "babel-plugin-module-resolver": "^5.0.2",
@@ -22,6 +23,7 @@
     "cloudinary": "^2.4.0",
     "discord.js": "^14.15.3",
     "dotenv": "^16.4.5",
+    "ecommerce-dophuong": "file:",
     "express": "^4.19.2",
     "ioredis": "^5.4.1",
     "jsonwebtoken": "^9.0.2",

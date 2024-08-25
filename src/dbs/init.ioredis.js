@@ -3,20 +3,6 @@
 const Redis = require('ioredis')
 const { RedisError } = require('~/core/error.response')
 
-// // create a new client redis
-// const client = redis.createClient({
-//   host,
-//   port,
-//   username,
-//   password
-// })
-
-// client.on('error', (err) => {
-//   console.error(`Error connecting to Redis: ${err}`)
-// })
-
-// module.exports = client
-
 let clients = {},
   connectRedisStatus = {
     CONNECT: 'connect',
@@ -72,7 +58,7 @@ const handleEventConnection = ({ connectionRedis }) => {
 const init = ({
   IOREDIS_IS_ENABLED,
   IOREDIS_HOSTS = process.env.REDIS_CACHE_HOST,
-  IOREDIS_PORT = process.env.REDIS_CACHE_PORT
+  IOREDIS_PORT = 6379
 }) => {
   if (IOREDIS_IS_ENABLED) {
     const redisInstance = new Redis({
